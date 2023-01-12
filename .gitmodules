@@ -1,0 +1,12 @@
+[submodule "router"]
+	path = modules/router
+	url = https://github.com/lcacollect/router-backend.git
+	branch = main
+[submodule "project"]
+	path = modules/project
+	url = https://github.com/lcacollect/project-backend.git
+	branch = main
+[submodule "documentation"]
+	path = modules/documentation
+	url = https://github.com/lcacollect/documentation-backend.git
+	branch = main
