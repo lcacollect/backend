@@ -10,3 +10,7 @@
 	path = modules/documentation
 	url = https://github.com/lcacollect/documentation-backend.git
 	branch = main
+[submodule "assembly"]
+	path = modules/assembly
+	url = git@github.com:lcacollect/assembly-backend.git
+	branch = main
