@@ -54,6 +54,31 @@ build:
           BUILD_STAGE: DEV
           BUILD_VERSION: DEV
 
+    - image: lcacollect/assembly
+      context: ./modules/assembly/
+      sync:
+        infer:
+          - 'src/**/*'
+          - 'alembic/**/*'
+        hooks:
+          after:
+            - container:
+                command:
+                  - bash
+                  - /app/export_schema.sh
+            - host:
+                command:
+                  - bash
+                  - modules/assembly/extract_schema.sh
+                os:
+                  - darwin
+                  - linux
+      docker:
+        dockerfile: ./modules/assembly/Dockerfile
+        buildArgs:
+          BUILD_STAGE: DEV
+          BUILD_VERSION: DEV
+
     - image: lcacollect/rover
       context: ./modules/router
       hooks:
@@ -61,6 +86,8 @@ build:
           - command: [ 'cp', 'modules/documentation/graphql/schema.graphql', './modules/router/schemas/documentation/' ]
             os: [ darwin, linux ]
           - command: [ 'cp', 'modules/project/graphql/schema.graphql', './modules/router/schemas/project/' ]
+            os: [ darwin, linux ]
+          - command: [ 'cp', 'modules/assembly/graphql/schema.graphql', './modules/router/schemas/assembly/' ]
             os: [ darwin, linux ]
       docker:
         dockerfile: ./modules/router/Dockerfile
@@ -80,9 +107,9 @@ manifests:
           backend.servicePort: "8002"
           db.ssl: "false"
           deployType: DEV
-          imageKey.registry: lcacollect/project
-          imageKey.repository: lcacollect/project
-          imageKey.tag: lcacollect/project
+          imageKey.registry: lcacollect
+          imageKey.repository: project
+          imageKey.tag: lastest
         setValueTemplates:
           backend.aadGraphSecret.value: '{{ .AAD_GRAPH_SECRET }}'
           backend.emailSecret.value: '{{ .EMAIL_SECRET }}'
@@ -95,9 +122,9 @@ manifests:
           backend.adAppClientId: '{{ .AAD_APP_CLIENT_ID }}'
         createNamespace: true
 
-      - name: documentation
-        chartPath: ./modules/documentation/helm
-        namespace: documentation
+      - name: assembly
+        chartPath: ./modules/assembly/helm
+        namespace: assembly
         setValues:
           appDomain: localhost:4205
           appProtocol: http
@@ -105,9 +132,28 @@ manifests:
           backend.storageBasePath: test
           db.ssl: "false"
           deployType: DEV
-          imageKey.registry: lcacollect/documentation
-          imageKey.repository: lcacollect/documentation
-          imageKey.tag: lcacollect/documentation
+          imageKey.registry: lcacollect
+          imageKey.repository: assembly
+          imageKey.tag: latest
+        setValueTemplates:
+          backend.adTenantId: '{{ .AAD_TENANT_ID }}'
+          backend.adOpenApiClientId: '{{ .AAD_OPENAPI_CLIENT_ID }}'
+          backend.adAppClientId: '{{ .AAD_APP_CLIENT_ID }}'
+        createNamespace: true
+
+      - name: documentation
+        chartPath: ./modules/documentation/helm
+        namespace: documentation
+        setValues:
+          appDomain: localhost:4205
+          appProtocol: http
+          backend.servicePort: "8004"
+          backend.storageBasePath: test
+          db.ssl: "false"
+          deployType: DEV
+          imageKey.registry: lcacollect
+          imageKey.repository: documentation
+          imageKey.tag: lastest
         setValueTemplates:
           backend.speckleTokenSecret.value: '{{ .SPECKLE_TOKEN }}'
           backend.storageAccountURL.value: '{{ .STORAGE_ACCOUNT_URL }}'
@@ -153,8 +199,18 @@ portForward:
 
   - resourceType: service
     resourceName: backend-service
-    namespace: documentation
+    namespace: assembly
     port: 8003
+  - resourceType: service
+    resourceName: database-service
+    namespace: assembly
+    port: 5432
+    localPort: 5434
+
+  - resourceType: service
+    resourceName: backend-service
+    namespace: documentation
+    port: 8004
   - resourceType: service
     resourceName: database-service
     namespace: documentation
