@@ -150,4 +150,4 @@ Running tests should be in each individual module. See README there.
 Unless otherwise described, the code in this repository is licensed under the Apache-2.0 License. Please note that some
 modules, extensions or code herein might be otherwise licensed. This is indicated either in the root of the containing
 folder under a different license file, or in the respective file's header. If you have any questions, don't hesitate to
-get in touch with us via [email](mailto:chrk@arkitema.com).
+get in touch with us via [email](mailto:molio@molio.dk).
