@@ -169,10 +169,10 @@ manifests:
         chartPath: ./modules/router/helm
         namespace: router
         setValues:
-          assemblyUrl: http://backend-service.assembly:8001/api/graphql
+          assemblyUrl: http://backend-service.assembly:8003/api/graphql
           clientOrigin: http://localhost:4200
           deployType: DEV
-          documentationUrl: http://backend-service.documentation:8003/api/graphql
+          documentationUrl: http://backend-service.documentation:8004/api/graphql
           imageKey.registry: lcacollect/rover
           imageKey.repository: lcacollect/rover
           imageKey.tag: lcacollect/rover
