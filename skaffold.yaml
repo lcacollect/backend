@@ -24,7 +24,7 @@ build:
                   - darwin
                   - linux
       docker:
-        dockerfile: ./modules/project/Dockerfile
+        dockerfile: ./Dockerfile
         buildArgs:
           BUILD_STAGE: DEV
           BUILD_VERSION: DEV
@@ -49,7 +49,7 @@ build:
                   - darwin
                   - linux
       docker:
-        dockerfile: ./modules/documentation/Dockerfile
+        dockerfile: ./Dockerfile
         buildArgs:
           BUILD_STAGE: DEV
           BUILD_VERSION: DEV
@@ -74,7 +74,7 @@ build:
                   - darwin
                   - linux
       docker:
-        dockerfile: ./modules/assembly/Dockerfile
+        dockerfile: ./Dockerfile
         buildArgs:
           BUILD_STAGE: DEV
           BUILD_VERSION: DEV
@@ -90,7 +90,7 @@ build:
           - command: [ 'cp', 'modules/assembly/graphql/schema.graphql', './modules/router/schemas/assembly/' ]
             os: [ darwin, linux ]
       docker:
-        dockerfile: ./modules/router/Dockerfile
+        dockerfile: ./Dockerfile
 
 manifests:
   helm:
